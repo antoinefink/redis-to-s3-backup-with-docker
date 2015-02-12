@@ -16,6 +16,7 @@ docker run -t -i --rm \
   -e SERVER_IP=111.32.10.89 \
   -e SERVER_USER=root \
   -e RDB_PATH=/var/lib/redis/6379/dump.rdb \
+  -e DESTINATION=mybucket/redis \
   antoinefinkelstein/redis-s3-backup-with-docker
 ```
 
