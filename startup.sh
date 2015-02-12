@@ -76,6 +76,6 @@ website_error =
 website_index = index.html
 ' >> /root/.s3cfg
 
-s3cmd put $newname s3://companydb-backups/redis/$newname
+s3cmd put $newname s3://$destination/$newname
 
 echo "Redis backup successful"

@@ -38,7 +38,7 @@ Requires=docker.service
 
 [Service]
 ExecStartPre=/usr/bin/docker pull --all-tags=false antoinefinkelstein/redis-s3-backup-with-docker
-ExecStart=/bin/sh -c '/usr/bin/docker run -e PUBLIC_KEY="$(/usr/bin/etcdctl get /secrets/id_rsa.pub)" -e PRIVATE_KEY="-----$(/usr/bin/etcdctl get /secrets/id_rsa)" -e AWS_SECRET_KEY="$(/usr/bin/etcdctl get /secrets/aws_key)" -e AWS_ENCRYPTION_PASSWORD="$(/usr/bin/etcdctl get /secrets/aws_encryption_password)" -e AWS_ACCESS_KEY="$(/usr/bin/etcdctl get /secrets/aws_access_key)" -e SERVER_IP="$(/usr/bin/etcdctl get /services/redis)" -e SERVER_USER=root -e RDB_PATH=/var/lib/redis/6379/dump.rdb antoinefinkelstein/redis-s3-backup-with-docker'
+ExecStart=/bin/sh -c '/usr/bin/docker run -e PUBLIC_KEY="$(/usr/bin/etcdctl get /secrets/id_rsa.pub)" -e PRIVATE_KEY="-----$(/usr/bin/etcdctl get /secrets/id_rsa)" -e AWS_SECRET_KEY="$(/usr/bin/etcdctl get /secrets/aws_key)" -e AWS_ENCRYPTION_PASSWORD="$(/usr/bin/etcdctl get /secrets/aws_encryption_password)" -e AWS_ACCESS_KEY="$(/usr/bin/etcdctl get /secrets/aws_access_key)" -e SERVER_IP="$(/usr/bin/etcdctl get /services/redis)" -e SERVER_USER=root -e RDB_PATH=/var/lib/redis/6379/dump.rdb -e DESTINATION=mybucket/redis antoinefinkelstein/redis-s3-backup-with-docker'
 ```
 
 redis-backup.timer :
