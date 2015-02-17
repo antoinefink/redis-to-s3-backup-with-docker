@@ -13,7 +13,7 @@ docker run --rm \
   -e AWS_ACCESS_KEY='AWS Access Key' \
   -e DESTINATION=mybucket/redis \
   -v /var/lib/redis/6379/dump.rdb:/dump.rdb \
-  antoinefinkelstein/redis-s3-backup-with-docker
+  antoinefinkelstein/redis-s3-backup
 ```
 
 **And that's it ! Your backup is done. :-)**
