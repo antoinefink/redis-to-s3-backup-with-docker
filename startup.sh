@@ -1,15 +1,20 @@
 #!/bin/bash
 
-echo $PUBLIC_KEY > ~/.ssh/id_rsa.pub
-echo -e $PRIVATE_KEY > ~/.ssh/id_rsa
-
-scp -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP:$RDB_PATH /
+# Test if the file exists
+if [ -f /dump.rdb ]
+then
+    echo dump.rdb found
+else
+    echo dump.rdb not found. Check the path in the run command.
+    exit 0
+fi
 
 date=`date +%Y-%m-%d`
 prefix='dump-'
-suffix='.rdb'
+suffix='.rdb.tar.gz'
 newname=$prefix$date$suffix
-mv /dump.rdb /$newname
+
+tar -zcvpf $newname dump.rdb
 
 echo -e '
 [default]
@@ -76,6 +81,6 @@ website_error =
 website_index = index.html
 ' >> /root/.s3cfg
 
-s3cmd put $newname s3://$destination/$newname
+s3cmd put $newname s3://$DESTINATION/$newname
 
 echo "Redis backup successful"
