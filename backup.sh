@@ -9,6 +9,33 @@ else
     exit 0
 fi
 
+if [ "${S3_ACCESS_KEY_ID}" = "**None**" ]; then
+  echo "You need to set the S3_ACCESS_KEY_ID environment variable."
+  exit 1
+fi
+
+if [ "${S3_SECRET_ACCESS_KEY}" = "**None**" ]; then
+  echo "You need to set the S3_SECRET_ACCESS_KEY environment variable."
+  exit 1
+fi
+
+if [ "${S3_BUCKET}" = "**None**" ]; then
+  echo "You need to set the S3_BUCKET environment variable."
+  exit 1
+fi
+
+
+if [ "${S3_ENDPOINT}" == "**None**" ]; then
+  AWS_ARGS=""
+else
+  AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
+fi
+
+# env vars needed for aws tools
+export AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
+export AWS_DEFAULT_REGION=$S3_REGION
+
 date=`date +%Y-%m-%d`
 prefix='dump-'
 suffix='.rdb.tar.gz'
@@ -16,71 +43,7 @@ newname=$prefix$date$suffix
 
 tar -zcvpf $newname dump.rdb
 
-echo -e '
-[default]
-access_key = $AWS_ACCESS_KEY
-access_token =
-add_encoding_exts =
-add_headers =
-bucket_location = US
-cache_file =
-cloudfront_host = cloudfront.amazonaws.com
-default_mime_type = binary/octet-stream
-delay_updates = False
-delete_after = False
-delete_after_fetch = False
-delete_removed = False
-dry_run = False
-enable_multipart = True
-encoding = ANSI_X3.4-1968
-encrypt = False
-expiry_date =
-expiry_days =
-expiry_prefix =
-follow_symlinks = False
-force = False
-get_continue = False
-gpg_command = /usr/bin/gpg
-gpg_decrypt = %(gpg_command)s -d --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
-gpg_encrypt = %(gpg_command)s -c --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
-gpg_passphrase = $AWS_ENCRYPTION_PASSWORD
-guess_mime_type = True
-host_base = s3.amazonaws.com
-host_bucket = %(bucket)s.s3.amazonaws.com
-human_readable_sizes = False
-ignore_failed_copy = False
-invalidate_default_index_on_cf = False
-invalidate_default_index_root_on_cf = True
-invalidate_on_cf = False
-list_md5 = False
-log_target_prefix =
-max_delete = -1
-mime_type =
-multipart_chunk_size_mb = 15
-preserve_attrs = True
-progress_meter = True
-proxy_host =
-proxy_port = 0
-put_continue = False
-recursive = False
-recv_chunk = 4096
-reduced_redundancy = False
-restore_days = 1
-secret_key = $AWS_SECRET_KEY
-send_chunk = 4096
-server_side_encryption = False
-simpledb_host = sdb.amazonaws.com
-skip_existing = False
-socket_timeout = 300
-urlencoding_mode = normal
-use_https = False
-use_mime_magic = True
-verbosity = WARNING
-website_endpoint = http://%(bucket)s.s3-website-%(location)s.amazonaws.com/
-website_error =
-website_index = index.html
-' >> /root/.s3cfg
 
-s3cmd put $newname s3://$DESTINATION/$newname
+cat $newname | aws $AWS_ARGS s3 cp - s3://$S3_BUCKET/$S3_PREFIX/$newname || exit 2
 
 echo "Redis backup successful"
