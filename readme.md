@@ -12,7 +12,8 @@ docker run --rm \
   -e AWS_ENCRYPTION_PASSWORD='AWS Encryption Password' \
   -e AWS_ACCESS_KEY='AWS Access Key' \
   -e DESTINATION=mybucket/redis \
-  -v /var/lib/redis/6379/dump.rdb:/dump.rdb \
+  -e SCHEDULE='@daily'\
+  -v /var/lib/redis/6379/dump.rdb:/dump.rdb \ 
   antoinefinkelstein/redis-s3-backup
 ```
 
@@ -21,3 +22,9 @@ docker run --rm \
 ## Contributing
 
 This script can get a lot better. Pull requests welcome !
+
+### Automatic Periodic Backups
+
+You can additionally set the `SCHEDULE` environment variable like `-e SCHEDULE="@daily"` to run the backup automatically.
+
+More information about the scheduling can be found [here](http://godoc.org/github.com/robfig/cron#hdr-Predefined_schedules).
