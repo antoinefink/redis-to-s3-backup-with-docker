@@ -8,15 +8,24 @@ If needed [install Docker](https://docs.docker.com/installation/). Then run the 
 
 ```
 docker run --rm \
-  -e AWS_SECRET_KEY='AWS Secret Key' \
-  -e AWS_ENCRYPTION_PASSWORD='AWS Encryption Password' \
-  -e AWS_ACCESS_KEY='AWS Access Key' \
-  -e DESTINATION=mybucket/redis \
-  -v /var/lib/redis/6379/dump.rdb:/dump.rdb \
+  -e S3_ACCESS_KEY_ID=key  \
+  -e S3_SECRET_ACCESS_KEY=secret \
+  -e S3_BUCKET=my-bucket \
+  -e S3_PREFIX=backup \
+  -e SCHEDULE='@daily'\
+  -e PATH_TO_REDIS_DB='/data/enketo-cache.rdb'\
   antoinefinkelstein/redis-s3-backup
 ```
 
 **And that's it ! Your backup is done. :-)**
+
+
+### Automatic Periodic Backups
+
+You can additionally set the `SCHEDULE` environment variable like `-e SCHEDULE="@daily"` to run the backup automatically.
+
+More information about the scheduling can be found [here](http://godoc.org/github.com/robfig/cron#hdr-Predefined_schedules).
+
 
 ## Contributing
 
