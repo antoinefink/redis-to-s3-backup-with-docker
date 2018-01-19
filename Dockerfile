@@ -18,7 +18,7 @@ ENV SCHEDULE **None**
 
 
 # Define default command.
-ADD backup.sh /backup.sh
-ADD startup.sh /startup.sh
+ADD backup.sh backup.sh
+ADD startup.sh startup.sh
 
-CMD ["/startup.sh"]
+CMD ["sh","startup.sh"]

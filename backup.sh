@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Test if the file exists
-if [ -f /dump.rdb ]
+if [ -f $PATH_TO_REDIS_DB ]
 then
-    echo dump.rdb found
+    echo $PATH_TO_REDIS_DB found
 else
-    echo dump.rdb not found. Check the path in the run command.
+    echo $PATH_TO_REDIS_DB not found. Check the path in the run command.
     exit 0
 fi
 
@@ -41,7 +41,7 @@ prefix='dump-'
 suffix='.rdb.tar.gz'
 newname=$prefix$date$suffix
 
-tar -zcvpf $newname dump.rdb
+tar -zcvpf $newname $PATH_TO_REDIS_DB
 
 
 cat $newname | aws $AWS_ARGS s3 cp - s3://$S3_BUCKET/$S3_PREFIX/$newname || exit 2

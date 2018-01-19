@@ -13,7 +13,7 @@ docker run --rm \
   -e S3_BUCKET=my-bucket \
   -e S3_PREFIX=backup \
   -e SCHEDULE='@daily'\
-  -v /var/lib/redis/6379/dump.rdb:/dump.rdb \ 
+  -e PATH_TO_REDIS_DB='/data/enketo-cache.rdb'\
   antoinefinkelstein/redis-s3-backup
 ```
 
